@@ -7,10 +7,10 @@ A dynamic web application built with Vue 3 and TypeScript that allows users to m
 ## 📸 Screenshots
 
 ### Light Theme
-![Light Theme](/docs/images/light-theme.png)
+![Light Theme](/docs/images/light-theme.jpg)
 
 ### Dark Theme
-![Dark Theme](/docs/images/dark-theme.png)
+![Dark Theme](/docs/images/dark-theme.jpg)
 
 ## ✨ Features
 
