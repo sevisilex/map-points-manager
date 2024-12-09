@@ -4,7 +4,7 @@
     <div class="flex items-center gap-2 mb-3">
       <span
         class="text-xl flex items-center justify-center w-8 h-8 rounded-full"
-        :style="{ backgroundColor: location.color || '#2196F3', color: location.color === '#FFFFFF' ? '#000000' : '#FFFFFF' }"
+        :style="{ backgroundColor: location.color ? MARKER_COLORS[location.color] : '#2196F3', color: location.color === 'white' ? '#000000' : '#FFFFFF' }"
       >
         <i :class="`mdi mdi-${getIconName(location.iconType)} leading-none`"></i>
       </span>
@@ -60,6 +60,7 @@
 import { defineComponent, PropType } from 'vue'
 import type { Location } from '../types/Location'
 import { useI18n } from '../i18n'
+import { getIconName, MARKER_COLORS } from '../constants/markerIcons'
 
 export default defineComponent({
   name: 'LocationPopup',
@@ -71,25 +72,13 @@ export default defineComponent({
   },
   data() {
     const { t } = useI18n()
-    return { t }
+    return {
+      t,
+      MARKER_COLORS,
+    }
   },
   methods: {
-    getIconName(type: string = 'default'): string {
-      const iconMap: Record<string, string> = {
-        default: 'map-marker',
-        home: 'home',
-        shop: 'shopping',
-        restaurant: 'silverware-fork-knife',
-        school: 'school',
-        hospital: 'hospital',
-        park: 'nature',
-        gym: 'dumbbell',
-        cafe: 'coffee',
-        office: 'office-building',
-        parking: 'parking',
-      }
-      return iconMap[type] || 'map-marker'
-    },
+    getIconName,
   },
   emits: ['edit', 'delete'],
 })

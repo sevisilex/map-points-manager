@@ -52,6 +52,13 @@ import AboutDialog from './AboutDialog.vue'
 import { useI18n } from '../i18n'
 import type { TranslationType } from '../i18n'
 
+declare global {
+  interface Window {
+    editLocation: (id: number) => Promise<void>
+    deleteLocation: (id: number) => Promise<void>
+  }
+}
+
 export default defineComponent({
   name: 'MapComponent',
   components: {
@@ -131,7 +138,9 @@ export default defineComponent({
     },
 
     openAddMarkerForm() {
-      if (!this.map) return
+      if (!this.map) {
+        return
+      }
 
       const center = this.map.getCenter()
       this.currentMarker = {
@@ -201,7 +210,9 @@ export default defineComponent({
     },
 
     addMarkerToMap(location: Location) {
-      if (!this.map || !location.id) return
+      if (!this.map || !location.id) {
+        return
+      }
 
       const markerIcon = createMarkerIcon(location.iconType || 'default', MARKER_COLORS[location.color || 'blue'])
 
@@ -209,7 +220,7 @@ export default defineComponent({
         draggable: true,
         icon: markerIcon,
       })
-        .addTo(this.map)
+        .addTo(this.map as L.Map)
         .bindPopup(this.getPopupTemplate(location))
 
       marker.on('dragend', async () => {
@@ -245,21 +256,6 @@ export default defineComponent({
       this.markers.set(location.id, marker)
     },
 
-    async deleteLocation(id: number) {
-      if (confirm((this.t as TranslationType).confirmDelete)) {
-        try {
-          await LocationsAPI.delete(id)
-          const marker = this.markers.get(id)
-          if (marker) {
-            marker.remove()
-            this.markers.delete(id)
-          }
-        } catch (error) {
-          console.error('Error deleting point:', error)
-        }
-      }
-    },
-
     updateMap() {
       if (!this.map) {
         this.map = L.map('map', { zoomControl: false, minZoom: 3, doubleClickZoom: false }).setView([52.265040754253896, 10.521526343654843], 13)
@@ -267,7 +263,7 @@ export default defineComponent({
           .zoom({
             position: 'bottomleft',
           })
-          .addTo(this.map)
+          .addTo(this.map as L.Map)
       }
 
       // Update map tiles for dark mode
@@ -280,7 +276,7 @@ export default defineComponent({
 
         L.tileLayer(this.isDarkMode ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png' : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           attribution: this.isDarkMode ? '© OpenStreetMap contributors, © CARTO' : '© OpenStreetMap contributors',
-        }).addTo(this.map)
+        }).addTo(this.map as L.Map)
       }
     },
 
@@ -297,23 +293,25 @@ export default defineComponent({
     this.initTheme()
     this.updateMap()
 
-    this.map.on('dblclick', (e) => {
-      const { lat, lng } = e.latlng
-      this.currentMarker = {
-        name: '',
-        url: '',
-        latitude: lat,
-        longitude: lng,
-        description: '',
-        iconType: 'default',
-        color: 'blue',
-      }
-      this.editingMarker = null
-      this.showDialog = true
+    if (this.map) {
+      this.map.on('dblclick', (e) => {
+        const { lat, lng } = e.latlng
+        this.currentMarker = {
+          name: '',
+          url: '',
+          latitude: lat,
+          longitude: lng,
+          description: '',
+          iconType: 'default',
+          color: 'blue',
+        }
+        this.editingMarker = null
+        this.showDialog = true
 
-      const sidebarState = localStorage.getItem('sidebar-state')
-      this.isSidebarOpen = sidebarState === 'open'
-    })
+        const sidebarState = localStorage.getItem('sidebar-state')
+        this.isSidebarOpen = sidebarState === 'open'
+      })
+    }
 
     window.editLocation = async (id: number) => {
       const marker = this.markers.get(id)
@@ -336,7 +334,20 @@ export default defineComponent({
       }
     }
 
-    window.deleteLocation = this.deleteLocation.bind(this)
+    window.deleteLocation = async (id: number) => {
+      if (confirm((this.t as TranslationType).confirmDelete)) {
+        try {
+          await LocationsAPI.delete(id)
+          const marker = this.markers.get(id)
+          if (marker) {
+            marker.remove()
+            this.markers.delete(id)
+          }
+        } catch (error) {
+          console.error('Error deleting point:', error)
+        }
+      }
+    }
 
     await this.loadMarkers()
 

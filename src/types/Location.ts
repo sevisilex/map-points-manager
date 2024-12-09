@@ -1,3 +1,5 @@
+import { TranslationColorType, TranslationIconType } from "../i18n"
+
 export interface Location {
   id?: number
   name: string
@@ -5,6 +7,6 @@ export interface Location {
   latitude: number
   longitude: number
   description: string
-  iconType?: string
-  color?: string
+  iconType?: keyof TranslationIconType
+  color?: keyof TranslationColorType
 }

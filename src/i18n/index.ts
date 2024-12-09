@@ -2,7 +2,60 @@ import { ref, computed } from 'vue'
 
 type Language = 'de' | 'en' | 'pl'
 
-const translations = {
+const translation = {
+  toggleSidebar: 'Toggle sidebar',
+  locationsList: 'Locations',
+  exportCsv: 'Export as CSV',
+  loading: 'Loading...',
+  addPoint: 'Add point',
+  editPoint: 'Edit point',
+  addNewPoint: 'Add new point',
+  name: 'Name',
+  url: 'URL',
+  description: 'Description',
+  icon: 'Icon',
+  color: 'Color',
+  save: 'Save',
+  cancel: 'Cancel',
+  delete: 'Delete',
+  edit: 'Edit',
+  confirmDelete: 'Are you sure you want to delete this point?',
+  dragToChange: 'Drag to change position',
+  about: 'About',
+  aboutProject: 'About This Project',
+  buyMeCoffee: 'Buy me a coffee',
+  supportText: "If you're happy with this project, consider supporting my work!",
+  colors: {
+    blue: 'Blue',
+    red: 'Red',
+    orange: 'Orange',
+    green: 'Green',
+    purple: 'Purple',
+    pink: 'Pink',
+    white: 'White',
+    black: 'Black',
+  },
+  icons: {
+    default: 'Default',
+    home: 'Home',
+    shop: 'Shop',
+    restaurant: 'Restaurant',
+    school: 'School',
+    hospital: 'Hospital',
+    park: 'Park',
+    gym: 'Gym',
+    cafe: 'Cafe',
+    office: 'Office',
+    parking: 'Parking',
+  },
+}
+
+export type TranslationType = typeof translation
+export type TranslationIconType = typeof translation.icons
+export type TranslationColorType = typeof translation.colors
+
+const translations: Record<Language, TranslationType> = {
+  en: translation,
   de: {
     toggleSidebar: 'Seitenleiste umschalten',
     locationsList: 'Standorte',
@@ -48,53 +101,6 @@ const translations = {
       cafe: 'Café',
       office: 'Büro',
       parking: 'Parkplatz',
-    },
-  },
-  en: {
-    toggleSidebar: 'Toggle sidebar',
-    locationsList: 'Locations',
-    exportCsv: 'Export as CSV',
-    loading: 'Loading...',
-    addPoint: 'Add point',
-    editPoint: 'Edit point',
-    addNewPoint: 'Add new point',
-    name: 'Name',
-    url: 'URL',
-    description: 'Description',
-    icon: 'Icon',
-    color: 'Color',
-    save: 'Save',
-    cancel: 'Cancel',
-    delete: 'Delete',
-    edit: 'Edit',
-    confirmDelete: 'Are you sure you want to delete this point?',
-    dragToChange: 'Drag to change position',
-    about: 'About',
-    aboutProject: 'About This Project',
-    buyMeCoffee: 'Buy me a coffee',
-    supportText: "If you're happy with this project, consider supporting my work!",
-    colors: {
-      blue: 'Blue',
-      red: 'Red',
-      orange: 'Orange',
-      green: 'Green',
-      purple: 'Purple',
-      pink: 'Pink',
-      white: 'White',
-      black: 'Black',
-    },
-    icons: {
-      default: 'Default',
-      home: 'Home',
-      shop: 'Shop',
-      restaurant: 'Restaurant',
-      school: 'School',
-      hospital: 'Hospital',
-      park: 'Park',
-      gym: 'Gym',
-      cafe: 'Cafe',
-      office: 'Office',
-      parking: 'Parking',
     },
   },
   pl: {
@@ -148,9 +154,6 @@ const translations = {
 
 // Create i18n store
 const currentLanguage = ref<Language>('de') // default language is German
-
-// Type for translation access
-export type TranslationType = typeof translations.de
 
 export const useI18n = () => {
   const t = computed(() => translations[currentLanguage.value])

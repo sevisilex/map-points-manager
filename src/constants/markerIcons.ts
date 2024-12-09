@@ -1,6 +1,7 @@
 import L from 'leaflet'
+import { TranslationColorType, TranslationIconType } from '../i18n'
 
-export const MARKER_COLORS: { [key: string]: string } = {
+export const MARKER_COLORS: Record<keyof TranslationColorType, string> = {
   blue: '#2196F3', // default blue
   red: '#FF0000', // red
   orange: '#FFA500', // orange
@@ -13,7 +14,7 @@ export const MARKER_COLORS: { [key: string]: string } = {
 
 export type MarkerColorKey = keyof typeof MARKER_COLORS
 
-export const COLOR_LABELS: { [key: string]: string } = {
+export const COLOR_LABELS: Record<keyof TranslationColorType, string> = {
   blue: 'Blue',
   red: 'Red',
   orange: 'Orange',
@@ -34,7 +35,7 @@ const createMdiIcon = (iconName: string, color: string = '#FFFFFF', bgColor: str
   })
 }
 
-const MARKER_ICONS: { [key: string]: string } = {
+export const MARKER_ICONS: Record<keyof TranslationIconType, string> = {
   default: 'map-marker',
   home: 'home',
   shop: 'shopping',
@@ -48,7 +49,7 @@ const MARKER_ICONS: { [key: string]: string } = {
   parking: 'parking',
 }
 
-export const ICON_LABELS: { [key: string]: string } = {
+export const ICON_LABELS: Record<keyof TranslationIconType, string> = {
   default: 'Default',
   home: 'Home',
   shop: 'Shop',
@@ -62,7 +63,11 @@ export const ICON_LABELS: { [key: string]: string } = {
   parking: 'Parking',
 }
 
-export const createMarkerIcon = (iconType: string, markerColor: string = MARKER_COLORS.blue) => {
+export const createMarkerIcon = (iconType: keyof TranslationIconType, markerColor: string = MARKER_COLORS.blue) => {
   const baseIcon: string = MARKER_ICONS[iconType] || MARKER_ICONS.default
   return createMdiIcon(baseIcon, markerColor === MARKER_COLORS.white ? '#000000' : '#FFFFFF', markerColor)
+}
+
+export const getIconName = (type: keyof TranslationIconType = 'default'): string => {
+  return MARKER_ICONS[type] || 'map-marker'
 }

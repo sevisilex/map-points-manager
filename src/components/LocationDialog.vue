@@ -53,13 +53,15 @@
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-200">{{ t.icon }}:</label>
           <div class="grid grid-cols-3 sm:grid-cols-4 gap-2 p-2 border border-gray-200 dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-800">
             <div
-              v-for="(type, key) in ICON_LABELS"
+              v-for="(_, key) in ICON_LABELS"
               :key="key"
               class="flex flex-col items-center p-2 rounded cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
               :class="{ 'bg-blue-100 dark:bg-blue-900 ring-2 ring-blue-500': formData.iconType === key }"
               @click="selectIcon(key)"
             >
-              <span class="text-2xl dark:text-white" v-html="getIconPreview(key)"></span>
+              <span class="text-2xl dark:text-white">
+                <i :class="`mdi mdi-${getIconName(key)} leading-none`"></i>
+              </span>
               <span class="text-xs text-center mt-1 dark:text-gray-300">{{ t.icons[key] }}</span>
             </div>
           </div>
@@ -107,8 +109,8 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import { useI18n } from '../i18n'
-import { MARKER_COLORS, ICON_LABELS } from '../constants/markerIcons'
+import { TranslationColorType, TranslationIconType, useI18n } from '../i18n'
+import { MARKER_COLORS, ICON_LABELS, getIconName } from '../constants/markerIcons'
 import type { Location } from '../types/Location'
 
 export default defineComponent({
@@ -165,6 +167,8 @@ export default defineComponent({
   },
 
   methods: {
+    getIconName,
+
     onClose() {
       this.$emit('update:show', false)
     },
@@ -173,11 +177,11 @@ export default defineComponent({
       this.$emit('save', this.formData)
     },
 
-    selectIcon(type: string) {
+    selectIcon(type: keyof TranslationIconType) {
       this.formData.iconType = type
     },
 
-    selectColor(color: string) {
+    selectColor(color: keyof TranslationColorType) {
       this.formData.color = color
     },
 
@@ -185,23 +189,6 @@ export default defineComponent({
       if (this.formData.url) {
         window.open(this.formData.url, '_blank')
       }
-    },
-
-    getIconPreview(type: string) {
-      const iconConfig: { [key: string]: string } = {
-        default: 'map-marker',
-        home: 'home',
-        shop: 'shopping',
-        restaurant: 'silverware-fork-knife',
-        school: 'school',
-        hospital: 'hospital',
-        park: 'nature',
-        gym: 'dumbbell',
-        cafe: 'coffee',
-        office: 'office-building',
-        parking: 'parking',
-      }
-      return `<span class="mdi mdi-${iconConfig[type] || 'map-marker'}"></span>`
     },
   },
 })

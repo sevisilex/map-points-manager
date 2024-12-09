@@ -35,7 +35,9 @@
             'hover:bg-gray-50 dark:hover:bg-gray-700': selectedMarkerId !== marker.id,
           }"
         >
-          <span class="text-base" v-html="getIconPreview(marker.iconType || 'default')" :style="{ color: MARKER_COLORS[marker.color || 'blue'] }"></span>
+          <span class="text-base" :style="{ color: MARKER_COLORS[marker.color || 'blue'] }">
+            <i :class="`mdi mdi-${getIconName(marker.iconType)} leading-none`"></i>
+          </span>
           <div class="min-w-0 flex-1">
             <div class="font-medium text-sm text-gray-800 dark:text-white truncate">{{ marker.name }}</div>
             <div class="text-xs text-gray-500 dark:text-gray-400 truncate" v-if="marker.description">
@@ -51,7 +53,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
 import type { Location } from '../types/Location'
-import { MARKER_COLORS } from '../constants/markerIcons'
+import { getIconName, MARKER_COLORS } from '../constants/markerIcons'
 import { useI18n } from '../i18n'
 
 export default defineComponent({
@@ -83,22 +85,7 @@ export default defineComponent({
   },
 
   methods: {
-    getIconPreview(type: string) {
-      const iconConfig: { [key: string]: string } = {
-        default: 'map-marker',
-        home: 'home',
-        shop: 'shopping',
-        restaurant: 'silverware-fork-knife',
-        school: 'school',
-        hospital: 'hospital',
-        park: 'nature',
-        gym: 'dumbbell',
-        cafe: 'coffee',
-        office: 'office-building',
-        parking: 'parking',
-      }
-      return `<span class="mdi mdi-${iconConfig[type] || 'map-marker'}"></span>`
-    },
+    getIconName,
 
     exportToCsv() {
       const headers = ['name', 'latitude', 'longitude', 'description', 'url', 'iconType', 'color']
