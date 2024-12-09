@@ -31,7 +31,7 @@ export const LocationsAPI = {
     const updatedLocation: Location = {
       ...existingLocation,
       ...location,
-      id
+      id,
     }
 
     await locationsDB.updateLocation(updatedLocation)
@@ -39,5 +39,5 @@ export const LocationsAPI = {
 
   async delete(id: number): Promise<void> {
     await locationsDB.deleteLocation(id)
-  }
+  },
 }

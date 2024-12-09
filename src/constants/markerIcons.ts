@@ -11,7 +11,7 @@ export const MARKER_COLORS: { [key: string]: string } = {
   black: '#000000', // black
 }
 
-export type MarkerColorKey = keyof typeof MARKER_COLORS;
+export type MarkerColorKey = keyof typeof MARKER_COLORS
 
 export const COLOR_LABELS: { [key: string]: string } = {
   blue: 'Blue',
@@ -24,11 +24,7 @@ export const COLOR_LABELS: { [key: string]: string } = {
   black: 'Black',
 }
 
-const createMdiIcon = (
-  iconName: string,
-  color: string = '#FFFFFF',
-  bgColor: string = '#2196F3'
-) => {
+const createMdiIcon = (iconName: string, color: string = '#FFFFFF', bgColor: string = '#2196F3') => {
   return L.divIcon({
     html: `<div style="background-color: ${bgColor};"><span class="mdi mdi-${iconName} marker-icon" style="color: ${color};"></span></div>`,
     className: `custom-div-icon`,
@@ -66,14 +62,7 @@ export const ICON_LABELS: { [key: string]: string } = {
   parking: 'Parking',
 }
 
-export const createMarkerIcon = (
-  iconType: string,
-  markerColor: string = MARKER_COLORS.blue
-) => {
+export const createMarkerIcon = (iconType: string, markerColor: string = MARKER_COLORS.blue) => {
   const baseIcon: string = MARKER_ICONS[iconType] || MARKER_ICONS.default
-  return createMdiIcon(
-    baseIcon,
-    markerColor === MARKER_COLORS.white ? '#000000' : '#FFFFFF',
-    markerColor
-  )
+  return createMdiIcon(baseIcon, markerColor === MARKER_COLORS.white ? '#000000' : '#FFFFFF', markerColor)
 }

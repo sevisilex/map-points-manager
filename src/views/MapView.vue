@@ -11,7 +11,7 @@ import MapComponent from '../components/MapComponent.vue'
 export default defineComponent({
   name: 'MapView',
   components: {
-    MapComponent
-  }
+    MapComponent,
+  },
 })
 </script>
