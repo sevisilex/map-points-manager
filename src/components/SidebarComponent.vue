@@ -8,8 +8,8 @@
       <div class="p-2 flex items-center justify-between border-b border-gray-200 dark:border-gray-700">
         <h2 class="text-base font-semibold text-gray-800 dark:text-white">{{ t.locationsList }}</h2>
 
-        <!-- Add this export button -->
         <div class="flex gap-2">
+          <!-- Export -->
           <button @click="exportToCsv" class="p-1 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors">
             <span class="material-icons text-base">download</span>
           </button>
@@ -129,31 +129,24 @@ export default defineComponent({
 </script>
 
 <style scoped>
-/* Wąski scrollbar dla WebKit (Chrome, Safari, nowsze wersje Edge) */
+/* Narrow scrollbar for WebKit (Chrome, Safari, newer versions of Edge) */
 .custom-scrollbar::-webkit-scrollbar {
   width: 4px;
 }
-
 .custom-scrollbar::-webkit-scrollbar-track {
   background: transparent;
 }
-
 .custom-scrollbar::-webkit-scrollbar-thumb {
   background-color: rgba(156, 163, 175, 0.5);
   border-radius: 20px;
 }
-
-/* Dla trybu ciemnego */
 :deep(.dark) .custom-scrollbar::-webkit-scrollbar-thumb {
   background-color: rgba(75, 85, 99, 0.5);
 }
-
-/* Scrollbar dla Firefox */
 .custom-scrollbar {
   scrollbar-width: thin;
   scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
 }
-
 :deep(.dark) .custom-scrollbar {
   scrollbar-color: rgba(75, 85, 99, 0.5) transparent;
 }

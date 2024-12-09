@@ -134,10 +134,15 @@ Contributions make the open-source community an amazing place to learn, inspire,
 If you're happy with this project, consider buying me a coffee! 💕☕
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/svslx)
+<!--
+- 🌟 [Sponsor me on GitHub Sponsors](https://github.com/sponsors/sevisilex)
+- ☕ [Buy me a coffee](https://www.buymeacoffee.com/sevisilex)
+- ❤️ [Donate on Ko-fi](https://ko-fi.com/svslx)
+-->
 
 ## 📧 Contact
 
-Dariusz Krzeminski - [sevisilex@gmail.com](mailto:sevisilex@gmail.com)
+[Dariusz Krzeminski](mailto:2440034+sevisilex@users.noreply.github.com) - [GitHub Profile](https://github.com/sevisilex)
 
 Project Link: [https://github.com/sevisilex/map-points-manager](https://github.com/sevisilex/map-points-manager)
 

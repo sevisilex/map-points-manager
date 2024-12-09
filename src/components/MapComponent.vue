@@ -339,6 +339,10 @@ export default defineComponent({
     window.deleteLocation = this.deleteLocation.bind(this)
 
     await this.loadMarkers()
+
+    setTimeout(() => {
+      this.showAboutDialog = true
+    }, 3000)
   },
 })
 </script>

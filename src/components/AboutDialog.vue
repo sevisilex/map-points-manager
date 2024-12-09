@@ -4,8 +4,12 @@
       <!-- Header -->
       <div class="flex justify-between items-center mb-6">
         <div>
-          <h2 class="text-xl font-semibold text-gray-800 dark:text-white">About This Map</h2>
-          <p class="text-sm text-gray-600 dark:text-gray-400">Version 1.2.1</p>
+          <h2 class="text-xl font-semibold text-gray-800 dark:text-white flex items-center gap-2">
+            <span class="material-icons text-sm">density_medium</span>
+            About This Map
+          </h2>
+
+          <p class="text-sm text-gray-600 dark:text-gray-400">Version 1.2.2</p>
         </div>
         <button @click="onClose" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
           <span class="material-icons">close</span>
@@ -42,7 +46,16 @@
           </div>
 
           <div class="mt-6">
-            <p>Coded by Dariusz Krzeminski<!--, Hosted on Netlify --></p>
+            <p class="flex items-center gap-2">
+              Coded by
+              <a
+                href="https://github.com/sevisilex/map-points-manager"
+                target="_blank"
+                class="text-blue-500 hover:text-blue-600 dark:text-blue-400 hover:underline inline-flex items-center gap-1"
+              >
+                Dariusz Krzeminski</a
+              ><!--, Hosted on Netlify -->
+            </p>
           </div>
         </div>
 
