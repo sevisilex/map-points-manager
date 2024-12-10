@@ -145,8 +145,8 @@ export default defineComponent({
       this.currentMarker = {
         name: '',
         url: '',
-        latitude: center.lat,
-        longitude: center.lng,
+        latitude: center.lat || import.meta.env.VITE_DEFAULT_LAT,
+        longitude: center.lng || import.meta.env.VITE_DEFAULT_LNG,
         description: '',
         iconType: 'default',
         color: 'blue',
@@ -257,7 +257,10 @@ export default defineComponent({
 
     updateMap() {
       if (!this.map) {
-        this.map = L.map('map', { zoomControl: false, minZoom: 3, doubleClickZoom: false }).setView([52.265040754253896, 10.521526343654843], 13)
+        this.map = L.map('map', { zoomControl: false, minZoom: 3, doubleClickZoom: false }).setView(
+          [import.meta.env.VITE_DEFAULT_LAT || 52.265040754253896, import.meta.env.VITE_DEFAULT_LNG || 10.521526343654843],
+          import.meta.env.VITE_DEFAULT_ZOOM || 13
+        )
         L.control
           .zoom({
             position: 'bottomleft',
