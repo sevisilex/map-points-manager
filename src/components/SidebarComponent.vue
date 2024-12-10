@@ -35,9 +35,10 @@
             'hover:bg-gray-50 dark:hover:bg-gray-700': selectedMarkerId !== marker.id,
           }"
         >
-          <span class="text-base" :style="{ color: MARKER_COLORS[marker.color || 'blue'] }">
+          <span class="text-base" :style="{ color: marker.color === 'white' ? '#AAAAAA' : MARKER_COLORS[marker.color || 'blue'] }">
             <span class="material-icons leading-none mr-1">{{ getIconName(marker.iconType) }}</span>
           </span>
+
           <div class="min-w-0 flex-1">
             <div class="font-medium text-sm text-gray-800 dark:text-white truncate">{{ marker.name }}</div>
             <div class="text-xs text-gray-500 dark:text-gray-400 truncate" v-if="marker.description">

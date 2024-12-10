@@ -1,10 +1,41 @@
 import type { Location } from '../types/Location'
 import { locationsDB } from '../db/database'
 
-// Initialize the database on startup
-await locationsDB.init()
+const FALLBACK_LOCATION: Omit<Location, 'id'> = {
+  name: '[Demo] Failed to load demo.json',
+  description:
+    "This is a fallback demo point. It appears because the application could not load the demo.json file. Don't worry - you can still add your own locations!",
+  iconType: 'hospital',
+  color: 'red',
+  latitude: 52.26475,
+  longitude: 10.523597,
+}
+
+const loadDemoLocations = async (): Promise<Omit<Location, 'id'>[]> => {
+  try {
+    const response = await fetch('/demo.json')
+    if (!response.ok) {
+      throw new Error('Failed to load demo data')
+    }
+    return await response.json()
+  } catch (error) {
+    console.error('Error loading demo locations:', error)
+    return [FALLBACK_LOCATION]
+  }
+}
 
 export const LocationsAPI = {
+  async initialize() {
+    const locations = await locationsDB.getLocations()
+    if (locations.length === 0) {
+      console.log('Initializing database with demo locations...')
+      const demoLocations = await loadDemoLocations()
+      for (const location of demoLocations) {
+        await locationsDB.addLocation(location)
+      }
+    }
+  },
+
   async getAll(): Promise<Location[]> {
     return locationsDB.getLocations()
   },
@@ -41,3 +72,7 @@ export const LocationsAPI = {
     await locationsDB.deleteLocation(id)
   },
 }
+
+// Initialize the database on startup
+await locationsDB.init()
+await LocationsAPI.initialize()

@@ -4,7 +4,7 @@
     <div class="flex items-center gap-2 mb-3">
       <span
         class="text-xl flex items-center justify-center w-8 h-8 rounded-full"
-        :style="{ backgroundColor: location.color ? MARKER_COLORS[location.color] : '#2196F3', color: location.color === 'white' ? '#000000' : '#FFFFFF' }"
+        :style="{ backgroundColor: location.color ? MARKER_COLORS[location.color] : '#2196F3', color: location.color === 'white' ? '#AAAAAA' : '#FFFFFF' }"
       >
         <span class="material-icons marker-icon leading-none">{{ getIconName(location.iconType) }}</span>
       </span>

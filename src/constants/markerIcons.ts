@@ -17,6 +17,7 @@ export const MARKER_ICONS: Record<keyof TranslationIconType, string> = {
   home: 'home',
   shop: 'local_mall',
   restaurant: 'restaurant',
+  museum: 'museum',
   school: 'school',
   hospital: 'medical_services',
   park: 'nature',
@@ -31,7 +32,7 @@ export const getIconName = (type: keyof TranslationIconType = 'default'): string
 }
 
 export const createMarkerIcon = (iconType: keyof TranslationIconType, markerColor: string = MARKER_COLORS.blue) => {
-  return createMaterialIcon(getIconName(iconType), markerColor === MARKER_COLORS.white ? '#000000' : '#FFFFFF', markerColor)
+  return createMaterialIcon(getIconName(iconType), markerColor === MARKER_COLORS.white ? '#AAAAAA' : '#FFFFFF', markerColor)
 }
 
 const createMaterialIcon = (iconName: string, color: string = '#FFFFFF', bgColor: string = '#2196F3') => {
