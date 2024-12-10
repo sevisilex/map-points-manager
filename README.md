@@ -2,15 +2,19 @@
 
 A dynamic web application built with Vue 3 and TypeScript that allows users to mark and manage locations on an interactive map. Perfect for creating personalized maps with custom markers, descriptions, and categorization.
 
-[Report Bug](https://github.com/sevisilex/map-points-manager/issues) | [Request Feature](https://github.com/sevisilex/map-points-manager/issues)
-
 ## 📸 Screenshots
 
 ### Light Theme
+
 ![Light Theme](/docs/images/light-theme.jpg)
 
 ### Dark Theme
+
 ![Dark Theme](/docs/images/dark-theme.jpg)
+
+## 🚀 Live Demo
+
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/~/github.com/sevisilex/map-points-manager)
 
 ## ✨ Features
 
@@ -127,28 +131,33 @@ Contributions make the open-source community an amazing place to learn, inspire,
 - [OpenStreetMap](https://www.openstreetmap.org/) for providing map data
 - [Google Material Icons](https://fonts.google.com/icons) for the icons
 - [Claude AI](https://www.anthropic.com/claude) for development assistance and documentation support
+- [StackBlitz](https://stackblitz.com) for providing the online IDE and hosting
 - All our contributors and users
+
+## 📝 License
+
+Distributed under the MIT License. <!-- See `LICENSE` for more information. -->
+
+## 📧 Contact
+
+| Type              | Link                                                                                                                                                         |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 👤 Author         | [Dariusz Krzeminski](mailto:2440034+sevisilex@users.noreply.github.com)                                                                                      |
+| 📂 GitHub         | [github.com/sevisilex](https://github.com/sevisilex)                                                                                                         |
+| 🔗 Project        | [map-points-manager](https://github.com/sevisilex/map-points-manager)                                                                                        |
+| 🛠️ Issues<br><br> | 🐛 [Report a bug](https://github.com/sevisilex/map-points-manager/issues)<br> ✨ [Request a feature](https://github.com/sevisilex/map-points-manager/issues) |
 
 ## ☕ Support
 
 If you're happy with this project, consider buying me a coffee! 💕☕
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/svslx)
+
 <!--
 - 🌟 [Sponsor me on GitHub Sponsors](https://github.com/sponsors/sevisilex)
 - ☕ [Buy me a coffee](https://www.buymeacoffee.com/sevisilex)
 - ❤️ [Donate on Ko-fi](https://ko-fi.com/svslx)
 -->
-
-## 📧 Contact
-
-[Dariusz Krzeminski](mailto:2440034+sevisilex@users.noreply.github.com) - [GitHub Profile](https://github.com/sevisilex)
-
-Project Link: [https://github.com/sevisilex/map-points-manager](https://github.com/sevisilex/map-points-manager)
-
-## 📝 License
-
-Distributed under the MIT License. <!-- See `LICENSE` for more information. -->
 
 ---
 

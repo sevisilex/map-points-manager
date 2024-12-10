@@ -9,7 +9,7 @@
             About This Map
           </h2>
 
-          <p class="text-sm text-gray-600 dark:text-gray-400">Version 1.2.2</p>
+          <p class="text-sm text-gray-600 dark:text-gray-400">Version 1.2.5</p>
         </div>
         <button @click="onClose" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
           <span class="material-icons">close</span>
