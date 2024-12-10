@@ -36,7 +36,7 @@
           }"
         >
           <span class="text-base" :style="{ color: MARKER_COLORS[marker.color || 'blue'] }">
-            <i :class="`mdi mdi-${getIconName(marker.iconType)} leading-none`"></i>
+            <span class="material-icons leading-none mr-1">{{ getIconName(marker.iconType) }}</span>
           </span>
           <div class="min-w-0 flex-1">
             <div class="font-medium text-sm text-gray-800 dark:text-white truncate">{{ marker.name }}</div>

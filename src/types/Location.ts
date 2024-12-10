@@ -1,4 +1,4 @@
-import { TranslationColorType, TranslationIconType } from "../i18n"
+import { TranslationColorType, TranslationIconType } from '../i18n'
 
 export interface Location {
   id?: number

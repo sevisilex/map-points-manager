@@ -125,7 +125,7 @@ Contributions make the open-source community an amazing place to learn, inspire,
 
 - [Leaflet](https://leafletjs.com/) for the amazing mapping library
 - [OpenStreetMap](https://www.openstreetmap.org/) for providing map data
-- [Material Design Icons](https://materialdesignicons.com/) for the icons
+- [Google Material Icons](https://fonts.google.com/icons) for the icons
 - [Claude AI](https://www.anthropic.com/claude) for development assistance and documentation support
 - All our contributors and users
 

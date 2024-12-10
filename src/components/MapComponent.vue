@@ -43,7 +43,7 @@ import { createApp, defineComponent, h } from 'vue'
 import L from 'leaflet'
 import type { Location } from '../types/Location'
 import { LocationsAPI } from '../services/api'
-import { MARKER_COLORS, ICON_LABELS, createMarkerIcon } from '../constants/markerIcons'
+import { MARKER_COLORS, createMarkerIcon } from '../constants/markerIcons'
 import LocationDialog from './LocationDialog.vue'
 import LocationPopup from './LocationPopup.vue'
 import SidebarComponent from './SidebarComponent.vue'
@@ -95,7 +95,6 @@ export default defineComponent({
       showAboutDialog: false,
 
       MARKER_COLORS,
-      ICON_LABELS,
     }
   },
 

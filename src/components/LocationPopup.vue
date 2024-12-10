@@ -6,7 +6,7 @@
         class="text-xl flex items-center justify-center w-8 h-8 rounded-full"
         :style="{ backgroundColor: location.color ? MARKER_COLORS[location.color] : '#2196F3', color: location.color === 'white' ? '#000000' : '#FFFFFF' }"
       >
-        <i :class="`mdi mdi-${getIconName(location.iconType)} leading-none`"></i>
+        <span class="material-icons marker-icon leading-none">{{ getIconName(location.iconType) }}</span>
       </span>
       <h3 class="text-lg font-semibold text-gray-800 dark:text-white">
         {{ location.name }}
@@ -23,7 +23,7 @@
       <!-- URL with better icon and layout -->
       <div v-if="location.url" class="flex items-center gap-2 mt-2">
         <span class="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-gray-100 dark:bg-gray-700">
-          <i class="mdi mdi-earth text-gray-600 dark:text-gray-300 text-sm"></i>
+          <span class="material-icons text-gray-600 dark:text-gray-300 text-sm">public</span>
         </span>
         <a
           :href="location.url"
@@ -42,14 +42,14 @@
         @click="$emit('edit', location.id)"
         class="inline-flex items-center px-3 py-1.5 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-md border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors duration-200 text-sm"
       >
-        <i class="mdi mdi-pencil text-sm mr-1"></i>
+        <span class="material-icons text-sm mr-2">edit</span>
         {{ t.edit }}
       </button>
       <button
         @click="$emit('delete', location.id)"
         class="inline-flex items-center px-3 py-1.5 bg-red-500 dark:bg-red-600 text-white rounded-md hover:bg-red-600 dark:hover:bg-red-700 transition-colors duration-200 text-sm"
       >
-        <i class="mdi mdi-delete text-sm mr-1"></i>
+        <span class="material-icons text-sm mr-2">delete</span>
         {{ t.delete }}
       </button>
     </div>

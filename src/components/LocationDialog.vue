@@ -34,7 +34,7 @@
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-200">{{ t.url }}:</label>
           <div class="relative flex items-center">
             <span class="absolute left-3 text-gray-500 dark:text-gray-400">
-              <span class="mdi mdi-earth text-lg"></span>
+              <span class="material-icons text-lg">public</span>
             </span>
             <input
               v-model="formData.url"
@@ -43,7 +43,7 @@
               class="w-full pl-10 pr-10 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white dark:border-gray-600"
             />
             <button v-if="formData.url" @click.prevent="openUrl" class="absolute right-3 text-blue-500 hover:text-blue-600 dark:text-blue-400">
-              <span class="mdi mdi-open-in-new text-lg"></span>
+              <span class="material-icons text-lg">launch</span>
             </button>
           </div>
         </div>
@@ -53,14 +53,14 @@
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-200">{{ t.icon }}:</label>
           <div class="grid grid-cols-3 sm:grid-cols-4 gap-2 p-2 border border-gray-200 dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-800">
             <div
-              v-for="(_, key) in ICON_LABELS"
+              v-for="(_, key) in MARKER_ICONS"
               :key="key"
               class="flex flex-col items-center p-2 rounded cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
               :class="{ 'bg-blue-100 dark:bg-blue-900 ring-2 ring-blue-500': formData.iconType === key }"
               @click="selectIcon(key)"
             >
               <span class="text-2xl dark:text-white">
-                <i :class="`mdi mdi-${getIconName(key)} leading-none`"></i>
+                <span class="material-icons leading-none">{{ getIconName(key) }}</span>
               </span>
               <span class="text-xs text-center mt-1 dark:text-gray-300">{{ t.icons[key] }}</span>
             </div>
@@ -110,7 +110,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
 import { TranslationColorType, TranslationIconType, useI18n } from '../i18n'
-import { MARKER_COLORS, ICON_LABELS, getIconName } from '../constants/markerIcons'
+import { MARKER_COLORS, MARKER_ICONS, getIconName } from '../constants/markerIcons'
 import type { Location } from '../types/Location'
 
 export default defineComponent({
@@ -144,7 +144,7 @@ export default defineComponent({
     return {
       t,
       MARKER_COLORS,
-      ICON_LABELS,
+      MARKER_ICONS,
       formData: {
         name: '',
         url: '',
