@@ -9,7 +9,7 @@
             About This Map
           </h2>
 
-          <p class="text-sm text-gray-600 dark:text-gray-400">Version 1.2.5</p>
+          <p class="text-sm text-gray-600 dark:text-gray-400">Version 1.2.6</p>
         </div>
         <button @click="onClose" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
           <span class="material-icons">close</span>
@@ -61,7 +61,7 @@
 
         <!-- Buy Me Coffee Button -->
         <div class="pt-6 mt-6 border-t border-gray-200 dark:border-gray-700 text-center">
-          <p class="mb-4 text-sm text-gray-500 dark:text-gray-400">If you're happy with this project, consider buying me a coffee!</p>
+          <p class="mb-4 text-sm text-gray-500 dark:text-gray-400">{{ t.coffeeMessage }}</p>
           <a
             href="https://ko-fi.com/svslx"
             target="_blank"
@@ -74,7 +74,7 @@
                 >favorite</span
               >
             </span>
-            Buy me a coffee
+            {{ t.coffeeButton }}
           </a>
         </div>
       </div>
@@ -84,6 +84,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import { useI18n } from '../i18n'
 
 export default defineComponent({
   name: 'AboutDialog',
@@ -93,6 +94,11 @@ export default defineComponent({
       type: Boolean,
       required: true,
     },
+  },
+
+  data() {
+    const { t } = useI18n()
+    return { t }
   },
 
   emits: ['update:show'],

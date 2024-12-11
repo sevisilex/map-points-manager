@@ -25,14 +25,15 @@ const loadDemoLocations = async (): Promise<Omit<Location, 'id'>[]> => {
 }
 
 export const LocationsAPI = {
-  async initialize() {
+  async isDatabaseEmpty() {
     const locations = await locationsDB.getLocations()
-    if (locations.length === 0) {
-      console.log('Initializing database with demo locations...')
-      const demoLocations = await loadDemoLocations()
-      for (const location of demoLocations) {
-        await locationsDB.addLocation(location)
-      }
+    return locations.length === 0
+  },
+
+  async loadDemoLocations() {
+    const demoLocations = await loadDemoLocations()
+    for (const location of demoLocations) {
+      await locationsDB.addLocation(location)
     }
   },
 
@@ -73,6 +74,4 @@ export const LocationsAPI = {
   },
 }
 
-// Initialize the database on startup
 await locationsDB.init()
-await LocationsAPI.initialize()

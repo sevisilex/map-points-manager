@@ -52,7 +52,7 @@
           >favorite</span
         >
       </span>
-      Buy me a coffee
+      {{ t.coffeeButton }}
     </a>
   </div>
 

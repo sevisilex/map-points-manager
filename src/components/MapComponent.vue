@@ -24,15 +24,7 @@
 
       <AboutDialog v-model:show="showAboutDialog" />
 
-      <ConfirmDialog
-        v-model:show="showConfirmDialog"
-        :title="t.confirm"
-        :message="t.confirmDelete"
-        :confirm-text="t.delete"
-        :cancel-text="t.cancel"
-        @confirm="handleDeleteConfirm"
-        @cancel="showConfirmDialog = false"
-      />
+      <ConfirmDialog v-model:config="confirmDialogConfig" />
 
       <Controls
         :is-dark-mode="isDarkMode"
@@ -57,7 +49,7 @@ import { MARKER_COLORS, createMarkerIcon } from '../constants/markerIcons'
 import LocationDialog from './LocationDialog.vue'
 import LocationPopup from './LocationPopup.vue'
 import SidebarComponent from './SidebarComponent.vue'
-import ConfirmDialog from './ConfirmDialog.vue'
+import ConfirmDialog, { ConfirmDialogConfig } from './ConfirmDialog.vue'
 import Controls from './Controls.vue'
 import AboutDialog from './AboutDialog.vue'
 import { useI18n } from '../i18n'
@@ -104,7 +96,8 @@ export default defineComponent({
       locationsList: [] as Location[],
       selectedMarkerId: null as number | null,
       showAboutDialog: false,
-      showConfirmDialog: false,
+
+      confirmDialogConfig: null as ConfirmDialogConfig | null,
 
       MARKER_COLORS,
     }
@@ -136,9 +129,8 @@ export default defineComponent({
 
     async loadMarkers() {
       try {
-        const locations = await LocationsAPI.getAll()
-        this.locationsList = locations // Store locations for sidebar
-        locations.forEach((location) => {
+        this.locationsList = await LocationsAPI.getAll()
+        this.locationsList.forEach((location) => {
           if (location.id) {
             this.addMarkerToMap(location)
           }
@@ -211,6 +203,7 @@ export default defineComponent({
           this.addMarkerToMap(newLocation)
         }
 
+        this.locationsList = await LocationsAPI.getAll()
         this.showDialog = false
         this.selectedMarkerId = null
       } catch (error) {
@@ -299,24 +292,6 @@ export default defineComponent({
         document.documentElement.classList.add('dark')
       }
     },
-
-    async handleDeleteConfirm() {
-      if (this.selectedMarkerId !== null) {
-        try {
-          await LocationsAPI.delete(this.selectedMarkerId)
-          const marker = this.markers.get(this.selectedMarkerId)
-          if (marker) {
-            marker.remove()
-            this.markers.delete(this.selectedMarkerId)
-          }
-        } catch (error) {
-          console.error('Error deleting point:', error)
-        } finally {
-          this.showConfirmDialog = false
-          this.selectedMarkerId = null
-        }
-      }
-    },
   },
 
   async mounted() {
@@ -366,7 +341,49 @@ export default defineComponent({
 
     window.deleteLocation = async (id: number) => {
       this.selectedMarkerId = id
-      this.showConfirmDialog = true
+      this.confirmDialogConfig = {
+        title: this.t.confirm,
+        message: this.t.confirmDelete,
+        confirmText: this.t.delete,
+        cancelText: this.t.cancel,
+        variant: 'danger',
+        onConfirm: async () => {
+          try {
+            await LocationsAPI.delete(id)
+            this.locationsList = await LocationsAPI.getAll()
+            const marker = this.markers.get(id)
+            if (marker) {
+              marker.remove()
+              this.markers.delete(id)
+            }
+          } catch (error) {
+            console.error('Error deleting point:', error)
+          }
+        },
+        onCancel: () => {
+          this.selectedMarkerId = null
+        },
+      }
+    }
+
+    const shouldImportDemo = await LocationsAPI.isDatabaseEmpty()
+    if (shouldImportDemo) {
+      await new Promise<void>((resolve) => {
+        this.confirmDialogConfig = {
+          title: this.t.emptyDatabaseTitle,
+          message: this.t.emptyDatabaseMessage,
+          confirmText: this.t.importDemo,
+          cancelText: this.t.skipDemo,
+          onConfirm: async () => {
+            await LocationsAPI.loadDemoLocations()
+            await this.loadMarkers()
+            resolve()
+          },
+          onCancel: () => {
+            resolve()
+          },
+        }
+      })
     }
 
     await this.loadMarkers()
@@ -438,18 +455,4 @@ export default defineComponent({
 .leaflet-popup-tip {
   @apply dark:bg-gray-800;
 }
-
-// .leaflet-control-zoom {
-//   // position: fixed !important;
-//   bottom: 20px !important;
-//   // left: 20px !important;
-//   top: auto !important;
-// }
-
-// .leaflet-control-zoom a {
-//   @apply bg-white dark:bg-gray-800 text-gray-800 dark:text-white border-gray-200 dark:border-gray-700;
-//   &:hover {
-//     @apply bg-gray-50 dark:bg-gray-700;
-//   }
-// }
 </style>

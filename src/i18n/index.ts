@@ -22,10 +22,14 @@ const translation = {
   confirm: 'Confirm deletion',
   confirmDelete: 'Are you sure you want to delete this point?',
   dragToChange: 'Drag to change position',
+  emptyDatabaseTitle: 'Oh! All Empty Here!',
+  emptyDatabaseMessage: "Looks like you don't have any saved locations yet! Want to import 35 cool demo spots?",
+  importDemo: 'Yes, show me!',
+  skipDemo: "No thanks, I'll add my own",
   about: 'About',
   aboutProject: 'About This Project',
-  buyMeCoffee: 'Buy me a coffee',
-  supportText: "If you're happy with this project, consider supporting my work!",
+  coffeeMessage: "If you're happy with this project, consider buying me a coffee! ☕",
+  coffeeButton: 'Buy me a coffee',
   colors: {
     blue: 'Blue',
     red: 'Red',
@@ -78,10 +82,14 @@ const translations: Record<Language, TranslationType> = {
     confirm: 'Löschen bestätigen',
     confirmDelete: 'Möchten Sie diesen Punkt wirklich löschen?',
     dragToChange: 'Ziehen Sie zum Ändern der Position',
+    emptyDatabaseTitle: 'Oh! Ganz leer hier!',
+    emptyDatabaseMessage: 'Du hast noch keine gespeicherten Orte! Möchtest du 35 coole Demo-Locations importieren?',
+    importDemo: 'Ja, zeig mal!',
+    skipDemo: 'Nein danke, ich füge meine eigenen hinzu',
     about: 'Über',
     aboutProject: 'Über dieses Projekt',
-    buyMeCoffee: 'Kauf mir einen Kaffee',
-    supportText: 'Wenn Sie mit diesem Projekt zufrieden sind, unterstützen Sie meine Arbeit!',
+    coffeeMessage: 'Wenn dir das Projekt gefällt, spendier mir doch einen Kaffee! ☕',
+    coffeeButton: 'Kaffee spendieren',
     colors: {
       blue: 'Blau',
       red: 'Rot',
@@ -127,10 +135,14 @@ const translations: Record<Language, TranslationType> = {
     confirm: 'Potwierdź usunięcie',
     confirmDelete: 'Czy na pewno chcesz usunąć ten punkt?',
     dragToChange: 'Przeciągnij, aby zmienić pozycję',
+    emptyDatabaseTitle: 'Ojej! Puściutko tutaj!',
+    emptyDatabaseMessage: 'Nie masz jeszcze żadnych zapisanych miejsc! Zaimportować 35 fajnych lokalizacji demo?',
+    importDemo: 'Jasne, pokaż!',
+    skipDemo: 'Nie, dziękuję, dodam własne',
     about: 'O projekcie',
     aboutProject: 'O tym projekcie',
-    buyMeCoffee: 'Kup mi kawę',
-    supportText: 'Jeśli jesteś zadowolony z tego projektu, rozważ wsparcie mojej pracy!',
+    coffeeMessage: 'Jeśli podoba Ci się ten projekt, postaw mi kawę! ☕',
+    coffeeButton: 'Postaw kawkę!',
     colors: {
       blue: 'Niebieski',
       red: 'Czerwony',
@@ -158,8 +170,16 @@ const translations: Record<Language, TranslationType> = {
   },
 }
 
-// Create i18n store
-const currentLanguage = ref<Language>('de') // default language is German
+const getBrowserLanguage = (): Language => {
+  // Get browser language (returns something like 'pl-PL' or 'de')
+  const browserLang = navigator.language.toLowerCase().split('-')[0]
+  if (['de', 'pl'].includes(browserLang)) {
+    return browserLang as Language
+  }
+  return 'en'
+}
+
+const currentLanguage = ref<Language>(getBrowserLanguage())
 
 export const useI18n = () => {
   const t = computed(() => translations[currentLanguage.value])
