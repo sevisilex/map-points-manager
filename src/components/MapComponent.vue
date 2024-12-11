@@ -16,13 +16,23 @@
       <LocationDialog
         v-model:show="showDialog"
         :loading="loading"
-        :editing-marker="editingMarker"
+        :editing-marker="selectedMarkerId"
         :current-marker="currentMarker"
         :is-dark-mode="isDarkMode"
         @save="saveMarker"
       />
 
       <AboutDialog v-model:show="showAboutDialog" />
+
+      <ConfirmDialog
+        v-model:show="showConfirmDialog"
+        :title="t.confirm"
+        :message="t.confirmDelete"
+        :confirm-text="t.delete"
+        :cancel-text="t.cancel"
+        @confirm="handleDeleteConfirm"
+        @cancel="showConfirmDialog = false"
+      />
 
       <Controls
         :is-dark-mode="isDarkMode"
@@ -47,6 +57,7 @@ import { MARKER_COLORS, createMarkerIcon } from '../constants/markerIcons'
 import LocationDialog from './LocationDialog.vue'
 import LocationPopup from './LocationPopup.vue'
 import SidebarComponent from './SidebarComponent.vue'
+import ConfirmDialog from './ConfirmDialog.vue'
 import Controls from './Controls.vue'
 import AboutDialog from './AboutDialog.vue'
 import { useI18n } from '../i18n'
@@ -66,6 +77,7 @@ export default defineComponent({
     Controls,
     SidebarComponent,
     AboutDialog,
+    ConfirmDialog,
   },
 
   data() {
@@ -75,7 +87,6 @@ export default defineComponent({
       map: null as L.Map | null,
       markers: new Map<number, L.Marker>(),
       showDialog: false,
-      editingMarker: null as number | null,
       isDarkMode: false,
 
       currentMarker: {
@@ -93,6 +104,7 @@ export default defineComponent({
       locationsList: [] as Location[],
       selectedMarkerId: null as number | null,
       showAboutDialog: false,
+      showConfirmDialog: false,
 
       MARKER_COLORS,
     }
@@ -151,7 +163,7 @@ export default defineComponent({
         iconType: 'default',
         color: 'blue',
       }
-      this.editingMarker = null
+      this.selectedMarkerId = null
       this.showDialog = true
     },
 
@@ -184,16 +196,14 @@ export default defineComponent({
           color: location.color || 'blue',
         }
 
-        if (this.editingMarker) {
-          await LocationsAPI.update(this.editingMarker, locationData)
-          const marker = this.markers.get(this.editingMarker)
+        if (this.selectedMarkerId) {
+          await LocationsAPI.update(this.selectedMarkerId, locationData)
+          const marker = this.markers.get(this.selectedMarkerId)
           if (marker) {
             marker.setLatLng([locationData.latitude, locationData.longitude])
             const newIcon = createMarkerIcon(locationData.iconType, MARKER_COLORS[locationData.color])
             marker.setIcon(newIcon)
-            console.log('this.editingMarker', this.editingMarker)
-            console.log('locationData', locationData)
-            marker.setPopupContent(this.getPopupTemplate({ ...locationData, id: this.editingMarker }))
+            marker.setPopupContent(this.getPopupTemplate({ ...locationData, id: this.selectedMarkerId }))
           }
         } else {
           const result = await LocationsAPI.create(locationData)
@@ -202,7 +212,7 @@ export default defineComponent({
         }
 
         this.showDialog = false
-        this.editingMarker = null
+        this.selectedMarkerId = null
       } catch (error) {
         console.error('Error saving point:', error)
       }
@@ -289,6 +299,24 @@ export default defineComponent({
         document.documentElement.classList.add('dark')
       }
     },
+
+    async handleDeleteConfirm() {
+      if (this.selectedMarkerId !== null) {
+        try {
+          await LocationsAPI.delete(this.selectedMarkerId)
+          const marker = this.markers.get(this.selectedMarkerId)
+          if (marker) {
+            marker.remove()
+            this.markers.delete(this.selectedMarkerId)
+          }
+        } catch (error) {
+          console.error('Error deleting point:', error)
+        } finally {
+          this.showConfirmDialog = false
+          this.selectedMarkerId = null
+        }
+      }
+    },
   },
 
   async mounted() {
@@ -307,7 +335,7 @@ export default defineComponent({
           iconType: 'default',
           color: 'blue',
         }
-        this.editingMarker = null
+        this.selectedMarkerId = null
         this.showDialog = true
 
         const sidebarState = localStorage.getItem('sidebar-state')
@@ -321,7 +349,7 @@ export default defineComponent({
         try {
           this.loading = true
           const locationData = await LocationsAPI.getById(id)
-          this.editingMarker = id
+          this.selectedMarkerId = id
           this.currentMarker = {
             ...locationData,
             iconType: locationData.iconType || 'default',
@@ -337,18 +365,8 @@ export default defineComponent({
     }
 
     window.deleteLocation = async (id: number) => {
-      if (confirm((this.t as TranslationType).confirmDelete)) {
-        try {
-          await LocationsAPI.delete(id)
-          const marker = this.markers.get(id)
-          if (marker) {
-            marker.remove()
-            this.markers.delete(id)
-          }
-        } catch (error) {
-          console.error('Error deleting point:', error)
-        }
-      }
+      this.selectedMarkerId = id
+      this.showConfirmDialog = true
     }
 
     await this.loadMarkers()

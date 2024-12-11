@@ -130,9 +130,9 @@ Contributions make the open-source community an amazing place to learn, inspire,
 - [Leaflet](https://leafletjs.com/) for the amazing mapping library
 - [OpenStreetMap](https://www.openstreetmap.org/) for providing map data
 - [Google Material Icons](https://fonts.google.com/icons) for the icons
-- [Claude AI](https://www.anthropic.com/claude) for development assistance and documentation support
+<!-- - [Claude AI](https://www.anthropic.com/claude) for development assistance and documentation support -->
 - [StackBlitz](https://stackblitz.com) for providing the online IDE and hosting
-- All our contributors and users
+<!-- - All our contributors and users -->
 
 ## 📝 License
 
