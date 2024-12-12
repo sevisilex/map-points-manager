@@ -42,7 +42,7 @@
 
 <script lang="ts">
 import { createApp, defineComponent, h } from 'vue'
-import L from 'leaflet'
+import L, { Point } from 'leaflet'
 import type { Location } from '../types/Location'
 import { LocationsAPI } from '../services/api'
 import { MARKER_COLORS, createMarkerIcon } from '../constants/markerIcons'
@@ -247,6 +247,7 @@ export default defineComponent({
         marker.closePopup()
         marker.bindTooltip((this.t as TranslationType).dragToChange, {
           permanent: true,
+          offset: new Point(0, -32),
           direction: 'top',
         })
       })
@@ -384,12 +385,13 @@ export default defineComponent({
           },
         }
       })
+    } else {
+      await this.loadMarkers()
     }
-
-    await this.loadMarkers()
 
     setTimeout(() => {
       this.showAboutDialog = true
+      this.isSidebarOpen = true
     }, 3000)
   },
 })
