@@ -28,7 +28,7 @@
         <div
           v-for="marker in markers"
           :key="marker.id"
-          @click="$emit('marker-click', marker.id)"
+          @click="marker.id && $emit('marker-click', marker.id)"
           class="p-1.5 rounded-lg cursor-pointer transition-colors duration-200 flex items-center gap-1"
           :class="{
             'bg-blue-50 dark:bg-blue-900': selectedMarkerId === marker.id,
@@ -51,69 +51,48 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
+<script setup lang="ts">
 import type { Location } from '../types/Location'
 import { getIconName, MARKER_COLORS } from '../constants/markerIcons'
 import { useI18n } from '../i18n'
 
-export default defineComponent({
-  name: 'SidebarComponent',
+const props = defineProps<{
+  markers: Location[]
+  selectedMarkerId: number | null
+  isOpen: boolean
+}>()
 
-  props: {
-    markers: {
-      type: Array as PropType<Location[]>,
-      required: true,
-    },
-    selectedMarkerId: {
-      type: Number as PropType<number | null>,
-      default: null,
-    },
-    isOpen: {
-      type: Boolean,
-      default: false,
-    },
-  },
+defineEmits<{
+  'marker-click': [id: number]
+  toggle: []
+}>()
 
-  emits: ['marker-click', 'toggle'],
+const { t } = useI18n()
 
-  data() {
-    const { t } = useI18n()
-    return {
-      t,
-      MARKER_COLORS,
-    }
-  },
+const exportToCsv = () => {
+  const headers = ['name', 'latitude', 'longitude', 'description', 'url', 'iconType', 'color']
 
-  methods: {
-    getIconName,
-
-    exportToCsv() {
-      const headers = ['name', 'latitude', 'longitude', 'description', 'url', 'iconType', 'color']
-
-      const csvContent = this.markers.map((marker) => {
-        return headers
-          .map((header) => {
-            const value = marker[header as keyof Location] || ''
-            const escapedValue = String(value).replace(/"/g, '""')
-            return `"${escapedValue}"`
-          })
-          .join(',')
+  const csvContent = props.markers.map((marker) => {
+    return headers
+      .map((header) => {
+        const value = marker[header as keyof Location] || ''
+        const escapedValue = String(value).replace(/"/g, '""')
+        return `"${escapedValue}"`
       })
-      csvContent.unshift(headers.join(','))
+      .join(',')
+  })
+  csvContent.unshift(headers.join(','))
 
-      // Create and download CSV file
-      const blob = new Blob([csvContent.join('\n')], { type: 'text/csv;charset=utf-8;' })
-      const link = document.createElement('a')
-      const url = URL.createObjectURL(blob)
-      link.setAttribute('href', url)
-      link.setAttribute('download', 'locations.csv')
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-    },
-  },
-})
+  // Create and download CSV file
+  const blob = new Blob([csvContent.join('\n')], { type: 'text/csv;charset=utf-8;' })
+  const link = document.createElement('a')
+  const url = URL.createObjectURL(blob)
+  link.setAttribute('href', url)
+  link.setAttribute('download', 'locations.csv')
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+}
 </script>
 
 <style scoped>

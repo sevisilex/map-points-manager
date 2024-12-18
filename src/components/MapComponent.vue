@@ -40,8 +40,9 @@
   </div>
 </template>
 
-<script lang="ts">
-import { createApp, defineComponent, h } from 'vue'
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
+import { createApp, h } from 'vue'
 import L, { Point } from 'leaflet'
 import type { Location } from '../types/Location'
 import { LocationsAPI } from '../services/api'
@@ -49,351 +50,319 @@ import { MARKER_COLORS, createMarkerIcon } from '../constants/markerIcons'
 import LocationDialog from './LocationDialog.vue'
 import LocationPopup from './LocationPopup.vue'
 import SidebarComponent from './SidebarComponent.vue'
-import ConfirmDialog, { ConfirmDialogConfig } from './ConfirmDialog.vue'
+import type { ConfirmDialogConfig } from './ConfirmDialog.vue'
+import ConfirmDialog from './ConfirmDialog.vue'
 import Controls from './Controls.vue'
 import AboutDialog from './AboutDialog.vue'
 import { useI18n } from '../i18n'
-import type { TranslationType } from '../i18n'
 
-declare global {
-  interface Window {
-    editLocation: (id: number) => Promise<void>
-    deleteLocation: (id: number) => Promise<void>
+const { t } = useI18n()
+
+// State
+const map = ref<L.Map | null>(null)
+const markers = ref(new Map<number, L.Marker>())
+const showDialog = ref(false)
+const isDarkMode = ref(false)
+const showAboutDialog = ref(false)
+const confirmDialogConfig = ref<ConfirmDialogConfig | null>(null)
+const isSidebarOpen = ref(false)
+const locationsList = ref<Location[]>([])
+const selectedMarkerId = ref<number | null>(null)
+const loading = ref(false)
+
+const currentMarker = ref<Location>({
+  name: '',
+  url: '',
+  latitude: 0,
+  longitude: 0,
+  description: '',
+  iconType: 'default',
+  color: 'blue',
+})
+
+// Methods
+const toggleDarkMode = () => {
+  isDarkMode.value = !isDarkMode.value
+  document.documentElement.classList.toggle('dark')
+  localStorage.setItem('theme', isDarkMode.value ? 'dark' : 'light')
+  updateMap()
+}
+
+const toggleSidebar = () => {
+  isSidebarOpen.value = !isSidebarOpen.value
+  localStorage.setItem('sidebar-state', isSidebarOpen.value ? 'open' : 'closed')
+}
+
+const handleMarkerClick = async (markerId: number) => {
+  selectedMarkerId.value = markerId
+  const marker = markers.value.get(markerId)
+  if (marker && map.value) {
+    map.value.setView(marker.getLatLng(), map.value.getZoom() || 13)
+    marker.openPopup()
   }
 }
 
-export default defineComponent({
-  name: 'MapComponent',
-  components: {
-    LocationDialog,
-    Controls,
-    SidebarComponent,
-    AboutDialog,
-    ConfirmDialog,
-  },
-
-  data() {
-    const { t } = useI18n()
-    return {
-      t,
-      map: null as L.Map | null,
-      markers: new Map<number, L.Marker>(),
-      showDialog: false,
-      isDarkMode: false,
-
-      currentMarker: {
-        name: '',
-        url: '',
-        latitude: 0,
-        longitude: 0,
-        description: '',
-        iconType: 'default',
-        color: 'blue',
-      } as Location,
-      loading: false,
-
-      isSidebarOpen: false,
-      locationsList: [] as Location[],
-      selectedMarkerId: null as number | null,
-      showAboutDialog: false,
-
-      confirmDialogConfig: null as ConfirmDialogConfig | null,
-
-      MARKER_COLORS,
-    }
-  },
-
-  methods: {
-    toggleDarkMode() {
-      this.isDarkMode = !this.isDarkMode
-      document.documentElement.classList.toggle('dark')
-      localStorage.setItem('theme', this.isDarkMode ? 'dark' : 'light')
-
-      this.updateMap()
-    },
-
-    toggleSidebar() {
-      this.isSidebarOpen = !this.isSidebarOpen
-      localStorage.setItem('sidebar-state', this.isSidebarOpen ? 'open' : 'closed')
-    },
-
-    async handleMarkerClick(markerId: number) {
-      this.selectedMarkerId = markerId
-      const marker = this.markers.get(markerId)
-      if (marker) {
-        // const location = await LocationsAPI.getById(markerId)
-        this.map?.setView(marker.getLatLng(), this.map.getZoom() || 13)
-        marker.openPopup()
+const loadMarkers = async () => {
+  try {
+    locationsList.value = await LocationsAPI.getAll()
+    locationsList.value.forEach((location) => {
+      if (location.id) {
+        addMarkerToMap(location)
       }
-    },
+    })
+  } catch (error) {
+    console.error('Error loading points:', error)
+  }
+}
 
-    async loadMarkers() {
-      try {
-        this.locationsList = await LocationsAPI.getAll()
-        this.locationsList.forEach((location) => {
-          if (location.id) {
-            this.addMarkerToMap(location)
-          }
-        })
-      } catch (error) {
-        console.error('Error loading points:', error)
-      }
-    },
+const openAddMarkerForm = () => {
+  if (!map.value) return
 
-    openAddMarkerForm() {
-      if (!this.map) {
-        return
-      }
+  const center = map.value.getCenter()
+  currentMarker.value = {
+    name: '',
+    url: '',
+    latitude: center.lat || import.meta.env.VITE_DEFAULT_LAT,
+    longitude: center.lng || import.meta.env.VITE_DEFAULT_LNG,
+    description: '',
+    iconType: 'default',
+    color: 'blue',
+  }
+  selectedMarkerId.value = null
+  showDialog.value = true
+}
 
-      const center = this.map.getCenter()
-      this.currentMarker = {
-        name: '',
-        url: '',
-        latitude: center.lat || import.meta.env.VITE_DEFAULT_LAT,
-        longitude: center.lng || import.meta.env.VITE_DEFAULT_LNG,
-        description: '',
-        iconType: 'default',
-        color: 'blue',
-      }
-      this.selectedMarkerId = null
-      this.showDialog = true
-    },
-
-    getPopupTemplate(location: Location) {
-      const container = document.createElement('div')
-
-      const app = createApp({
-        render() {
-          return h(LocationPopup, {
-            location,
-            onEdit: (id: number) => window.editLocation(id),
-            onDelete: (id: number) => window.deleteLocation(id),
-          })
-        },
+const getPopupTemplate = (location: Location) => {
+  const container = document.createElement('div')
+  const app = createApp({
+    render() {
+      return h(LocationPopup, {
+        location,
+        onEdit: (id: number) => window.editLocation(id),
+        onDelete: (id: number) => window.deleteLocation(id),
       })
-
-      app.mount(container)
-      return container
     },
+  })
+  app.mount(container)
+  return container
+}
 
-    async saveMarker(location: Location) {
+const saveMarker = async (location: Location) => {
+  try {
+    const locationData = {
+      name: location.name,
+      url: location.url,
+      latitude: location.latitude,
+      longitude: location.longitude,
+      description: location.description || '',
+      iconType: location.iconType || 'default',
+      color: location.color || 'blue',
+    }
+
+    if (selectedMarkerId.value) {
+      await LocationsAPI.update(selectedMarkerId.value, locationData)
+      const marker = markers.value.get(selectedMarkerId.value)
+      if (marker) {
+        marker.setLatLng([locationData.latitude, locationData.longitude])
+        const newIcon = createMarkerIcon(locationData.iconType, MARKER_COLORS[locationData.color])
+        marker.setIcon(newIcon)
+        marker.setPopupContent(getPopupTemplate({ ...locationData, id: selectedMarkerId.value }))
+      }
+    } else {
+      const result = await LocationsAPI.create(locationData)
+      const newLocation = { ...locationData, id: result.id }
+      addMarkerToMap(newLocation)
+    }
+
+    locationsList.value = await LocationsAPI.getAll()
+    showDialog.value = false
+    selectedMarkerId.value = null
+  } catch (error) {
+    console.error('Error saving point:', error)
+  }
+}
+
+const addMarkerToMap = (location: Location) => {
+  if (!map.value || !location.id) {
+    return
+  }
+
+  const markerIcon = createMarkerIcon(location.iconType || 'default', MARKER_COLORS[location.color || 'blue'])
+
+  const marker = L.marker([location.latitude, location.longitude], {
+    draggable: true,
+    icon: markerIcon,
+  })
+    .addTo(map.value as L.Map)
+    .bindPopup(getPopupTemplate(location))
+
+  marker.on('dragend', async () => {
+    const newPosition = marker.getLatLng()
+    try {
+      if (location.id) {
+        await LocationsAPI.update(location.id, {
+          ...location,
+          latitude: newPosition.lat,
+          longitude: newPosition.lng,
+        })
+        location.latitude = newPosition.lat
+        location.longitude = newPosition.lng
+      }
+    } catch (error) {
+      console.error('Error updating position:', error)
+      marker.setLatLng([location.latitude, location.longitude])
+    }
+  })
+
+  marker.on('dragstart', () => {
+    marker.closePopup()
+    marker.bindTooltip(t.value.dragToChange, {
+      permanent: true,
+      offset: new Point(0, -32),
+      direction: 'top',
+    })
+  })
+
+  marker.on('dragend', () => {
+    marker.unbindTooltip()
+  })
+
+  if (location.id) {
+    markers.value.set(location.id, marker)
+  }
+}
+
+const updateMap = () => {
+  if (!map.value) {
+    map.value = L.map('map', { zoomControl: false, minZoom: 3, doubleClickZoom: false }).setView(
+      [import.meta.env.VITE_DEFAULT_LAT || 52.265040754253896, import.meta.env.VITE_DEFAULT_LNG || 10.521526343654843],
+      import.meta.env.VITE_DEFAULT_ZOOM || 13
+    )
+    L.control
+      .zoom({
+        position: 'bottomleft',
+      })
+      .addTo(map.value as L.Map)
+  }
+
+  // Update map tiles for dark mode
+  if (map.value) {
+    map.value.eachLayer((layer) => {
+      if (layer instanceof L.TileLayer) {
+        layer.remove()
+      }
+    })
+
+    L.tileLayer(isDarkMode.value ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png' : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: isDarkMode.value ? '© OpenStreetMap contributors, © CARTO' : '© OpenStreetMap contributors',
+    }).addTo(map.value as L.Map)
+  }
+}
+
+const initTheme = () => {
+  const theme = localStorage.getItem('theme')
+  isDarkMode.value = theme === 'dark'
+  if (isDarkMode.value) {
+    document.documentElement.classList.add('dark')
+  }
+}
+
+// Lifecycle hooks
+onMounted(async () => {
+  initTheme()
+  updateMap()
+
+  if (map.value) {
+    map.value.on('dblclick', (e) => {
+      const { lat, lng } = e.latlng
+      currentMarker.value = {
+        name: '',
+        url: '',
+        latitude: lat,
+        longitude: lng,
+        description: '',
+        iconType: 'default',
+        color: 'blue',
+      }
+      selectedMarkerId.value = null
+      showDialog.value = true
+    })
+  }
+
+  window.editLocation = async (id: number) => {
+    const marker = markers.value.get(id)
+    if (marker) {
       try {
-        const locationData = {
-          name: location.name,
-          url: location.url,
-          latitude: location.latitude,
-          longitude: location.longitude,
-          description: location.description || '',
-          iconType: location.iconType || 'default',
-          color: location.color || 'blue',
+        loading.value = true
+        const locationData = await LocationsAPI.getById(id)
+        selectedMarkerId.value = id
+        currentMarker.value = {
+          ...locationData,
+          iconType: locationData.iconType || 'default',
+          color: locationData.color || 'blue',
         }
+        showDialog.value = true
+      } catch (error) {
+        console.error('Error getting location data:', error)
+      } finally {
+        loading.value = false
+      }
+    }
+  }
 
-        if (this.selectedMarkerId) {
-          await LocationsAPI.update(this.selectedMarkerId, locationData)
-          const marker = this.markers.get(this.selectedMarkerId)
+  window.deleteLocation = async (id: number) => {
+    selectedMarkerId.value = id
+    confirmDialogConfig.value = {
+      title: t.value.confirm,
+      message: t.value.confirmDelete,
+      confirmText: t.value.delete,
+      cancelText: t.value.cancel,
+      variant: 'danger',
+      onConfirm: async () => {
+        try {
+          await LocationsAPI.delete(id)
+          locationsList.value = await LocationsAPI.getAll()
+          const marker = markers.value.get(id)
           if (marker) {
-            marker.setLatLng([locationData.latitude, locationData.longitude])
-            const newIcon = createMarkerIcon(locationData.iconType, MARKER_COLORS[locationData.color])
-            marker.setIcon(newIcon)
-            marker.setPopupContent(this.getPopupTemplate({ ...locationData, id: this.selectedMarkerId }))
-          }
-        } else {
-          const result = await LocationsAPI.create(locationData)
-          const newLocation = { ...locationData, id: result.id }
-          this.addMarkerToMap(newLocation)
-        }
-
-        this.locationsList = await LocationsAPI.getAll()
-        this.showDialog = false
-        this.selectedMarkerId = null
-      } catch (error) {
-        console.error('Error saving point:', error)
-      }
-    },
-
-    addMarkerToMap(location: Location) {
-      if (!this.map || !location.id) {
-        return
-      }
-
-      const markerIcon = createMarkerIcon(location.iconType || 'default', MARKER_COLORS[location.color || 'blue'])
-
-      const marker = L.marker([location.latitude, location.longitude], {
-        draggable: true,
-        icon: markerIcon,
-      })
-        .addTo(this.map as L.Map)
-        .bindPopup(this.getPopupTemplate(location))
-
-      marker.on('dragend', async () => {
-        const newPosition = marker.getLatLng()
-        try {
-          if (location.id) {
-            await LocationsAPI.update(location.id, {
-              ...location,
-              latitude: newPosition.lat,
-              longitude: newPosition.lng,
-            })
-            location.latitude = newPosition.lat
-            location.longitude = newPosition.lng
+            marker.remove()
+            markers.value.delete(id)
           }
         } catch (error) {
-          console.error('Error updating position:', error)
-          marker.setLatLng([location.latitude, location.longitude])
+          console.error('Error deleting point:', error)
         }
-      })
-
-      marker.on('dragstart', () => {
-        marker.closePopup()
-        marker.bindTooltip((this.t as TranslationType).dragToChange, {
-          permanent: true,
-          offset: new Point(0, -32),
-          direction: 'top',
-        })
-      })
-
-      marker.on('dragend', () => {
-        marker.unbindTooltip()
-      })
-
-      this.markers.set(location.id, marker)
-    },
-
-    updateMap() {
-      if (!this.map) {
-        this.map = L.map('map', { zoomControl: false, minZoom: 3, doubleClickZoom: false }).setView(
-          [import.meta.env.VITE_DEFAULT_LAT || 52.265040754253896, import.meta.env.VITE_DEFAULT_LNG || 10.521526343654843],
-          import.meta.env.VITE_DEFAULT_ZOOM || 13
-        )
-        L.control
-          .zoom({
-            position: 'bottomleft',
-          })
-          .addTo(this.map as L.Map)
-      }
-
-      // Update map tiles for dark mode
-      if (this.map) {
-        this.map.eachLayer((layer) => {
-          if (layer instanceof L.TileLayer) {
-            layer.remove()
-          }
-        })
-
-        L.tileLayer(this.isDarkMode ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png' : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: this.isDarkMode ? '© OpenStreetMap contributors, © CARTO' : '© OpenStreetMap contributors',
-        }).addTo(this.map as L.Map)
-      }
-    },
-
-    initTheme() {
-      const theme = localStorage.getItem('theme')
-      this.isDarkMode = theme === 'dark'
-      if (this.isDarkMode) {
-        document.documentElement.classList.add('dark')
-      }
-    },
-  },
-
-  async mounted() {
-    this.initTheme()
-    this.updateMap()
-
-    if (this.map) {
-      this.map.on('dblclick', (e) => {
-        const { lat, lng } = e.latlng
-        this.currentMarker = {
-          name: '',
-          url: '',
-          latitude: lat,
-          longitude: lng,
-          description: '',
-          iconType: 'default',
-          color: 'blue',
-        }
-        this.selectedMarkerId = null
-        this.showDialog = true
-
-        const sidebarState = localStorage.getItem('sidebar-state')
-        this.isSidebarOpen = sidebarState === 'open'
-      })
+      },
+      onCancel: () => {
+        selectedMarkerId.value = null
+      },
     }
+  }
 
-    window.editLocation = async (id: number) => {
-      const marker = this.markers.get(id)
-      if (marker) {
-        try {
-          this.loading = true
-          const locationData = await LocationsAPI.getById(id)
-          this.selectedMarkerId = id
-          this.currentMarker = {
-            ...locationData,
-            iconType: locationData.iconType || 'default',
-            color: locationData.color || 'blue',
-          }
-          this.showDialog = true
-        } catch (error) {
-          console.error('Error getting location data:', error)
-        } finally {
-          this.loading = false
-        }
-      }
-    }
-
-    window.deleteLocation = async (id: number) => {
-      this.selectedMarkerId = id
-      this.confirmDialogConfig = {
-        title: this.t.confirm,
-        message: this.t.confirmDelete,
-        confirmText: this.t.delete,
-        cancelText: this.t.cancel,
-        variant: 'danger',
+  const shouldImportDemo = await LocationsAPI.isDatabaseEmpty()
+  if (shouldImportDemo) {
+    await new Promise<void>((resolve) => {
+      confirmDialogConfig.value = {
+        title: t.value.emptyDatabaseTitle,
+        message: t.value.emptyDatabaseMessage,
+        confirmText: t.value.importDemo,
+        cancelText: t.value.skipDemo,
         onConfirm: async () => {
-          try {
-            await LocationsAPI.delete(id)
-            this.locationsList = await LocationsAPI.getAll()
-            const marker = this.markers.get(id)
-            if (marker) {
-              marker.remove()
-              this.markers.delete(id)
-            }
-          } catch (error) {
-            console.error('Error deleting point:', error)
-          }
+          await LocationsAPI.loadDemoLocations()
+          await loadMarkers()
+          resolve()
         },
         onCancel: () => {
-          this.selectedMarkerId = null
+          resolve()
         },
       }
-    }
+    })
+  } else {
+    await loadMarkers()
+  }
 
-    const shouldImportDemo = await LocationsAPI.isDatabaseEmpty()
-    if (shouldImportDemo) {
-      await new Promise<void>((resolve) => {
-        this.confirmDialogConfig = {
-          title: this.t.emptyDatabaseTitle,
-          message: this.t.emptyDatabaseMessage,
-          confirmText: this.t.importDemo,
-          cancelText: this.t.skipDemo,
-          onConfirm: async () => {
-            await LocationsAPI.loadDemoLocations()
-            await this.loadMarkers()
-            resolve()
-          },
-          onCancel: () => {
-            resolve()
-          },
-        }
-      })
-    } else {
-      await this.loadMarkers()
-    }
-
-    setTimeout(() => {
-      this.showAboutDialog = true
-      this.isSidebarOpen = true
-    }, 3000)
-  },
+  setTimeout(() => {
+    showAboutDialog.value = true
+    isSidebarOpen.value = true
+  }, 3000)
 })
 </script>
 

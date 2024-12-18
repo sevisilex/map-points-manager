@@ -71,46 +71,31 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
 import { useI18n } from '../i18n'
 
-export default defineComponent({
-  name: 'Controls',
+defineProps<{
+  isDarkMode: boolean
+  isSidebarOpen: boolean
+}>()
 
-  props: {
-    isDarkMode: {
-      type: Boolean,
-      required: true,
-    },
-    isSidebarOpen: {
-      type: Boolean,
-      required: true,
-    },
-  },
+defineEmits<{
+  'add-point': []
+  'toggle-dark-mode': []
+  'toggle-sidebar': []
+  'show-about': []
+}>()
 
-  data() {
-    const { t, setLanguage, getLanguage, initializeLanguage } = useI18n()
-    return {
-      t,
-      currentLang: getLanguage(),
-      setLanguage,
-      getLanguage,
-      initializeLanguage,
-    }
-  },
+const { t, setLanguage, getLanguage, initializeLanguage } = useI18n()
+const currentLang = ref(getLanguage())
 
-  mounted() {
-    this.initializeLanguage()
-    this.currentLang = this.getLanguage()
-  },
-
-  methods: {
-    handleLanguageChange() {
-      this.setLanguage(this.currentLang)
-    },
-  },
-
-  emits: ['add-point', 'toggle-dark-mode', 'toggle-sidebar', 'show-about'],
+onMounted(() => {
+  initializeLanguage()
+  currentLang.value = getLanguage()
 })
+
+const handleLanguageChange = () => {
+  setLanguage(currentLang.value)
+}
 </script>

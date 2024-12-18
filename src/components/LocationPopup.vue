@@ -39,14 +39,14 @@
     <!-- Actions -->
     <div class="flex justify-end gap-2 mt-4 pt-3 border-t border-gray-200 dark:border-gray-700">
       <button
-        @click="$emit('edit', location.id)"
+        @click="location.id && $emit('edit', location.id)"
         class="inline-flex items-center px-3 py-1.5 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-md border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors duration-200 text-sm"
       >
         <span class="material-icons text-sm mr-2">edit</span>
         {{ t.edit }}
       </button>
       <button
-        @click="$emit('delete', location.id)"
+        @click="location.id && $emit('delete', location.id)"
         class="inline-flex items-center px-3 py-1.5 bg-red-500 dark:bg-red-600 text-white rounded-md hover:bg-red-600 dark:hover:bg-red-700 transition-colors duration-200 text-sm"
       >
         <span class="material-icons text-sm mr-2">delete</span>
@@ -56,30 +56,20 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
+<script setup lang="ts">
+import { defineProps, defineEmits } from 'vue'
 import type { Location } from '../types/Location'
 import { useI18n } from '../i18n'
 import { getIconName, MARKER_COLORS } from '../constants/markerIcons'
 
-export default defineComponent({
-  name: 'LocationPopup',
-  props: {
-    location: {
-      type: Object as PropType<Location>,
-      required: true,
-    },
-  },
-  data() {
-    const { t } = useI18n()
-    return {
-      t,
-      MARKER_COLORS,
-    }
-  },
-  methods: {
-    getIconName,
-  },
-  emits: ['edit', 'delete'],
-})
+defineProps<{
+  location: Location
+}>()
+
+defineEmits<{
+  edit: [id: number]
+  delete: [id: number]
+}>()
+
+const { t } = useI18n()
 </script>

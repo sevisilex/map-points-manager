@@ -29,9 +29,7 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
-
+<script setup lang="ts">
 export interface ConfirmDialogConfig {
   title: string
   message: string
@@ -42,28 +40,25 @@ export interface ConfirmDialogConfig {
   onCancel?: () => void
 }
 
-export default defineComponent({
-  name: 'ConfirmDialog',
-  props: {
-    config: {
-      type: Object as PropType<ConfirmDialogConfig | null>,
-      default: null,
-    },
-  },
-  emits: ['update:config'],
-  methods: {
-    async onConfirm() {
-      if (this.config) {
-        await this.config.onConfirm()
-        this.$emit('update:config', null)
-      }
-    },
-    onCancel() {
-      if (this.config?.onCancel) {
-        this.config.onCancel()
-      }
-      this.$emit('update:config', null)
-    },
-  },
-})
+const props = defineProps<{
+  config: ConfirmDialogConfig | null
+}>()
+
+const emit = defineEmits<{
+  'update:config': [value: ConfirmDialogConfig | null]
+}>()
+
+const onConfirm = async () => {
+  if (props.config) {
+    await props.config.onConfirm()
+    emit('update:config', null)
+  }
+}
+
+const onCancel = () => {
+  if (props.config?.onCancel) {
+    props.config.onCancel()
+  }
+  emit('update:config', null)
+}
 </script>

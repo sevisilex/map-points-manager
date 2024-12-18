@@ -107,89 +107,64 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue'
+<script setup lang="ts">
+import { ref, defineProps, defineEmits, watch } from 'vue'
 import { TranslationColorType, TranslationIconType, useI18n } from '../i18n'
 import { MARKER_COLORS, MARKER_ICONS, getIconName } from '../constants/markerIcons'
 import type { Location } from '../types/Location'
 
-export default defineComponent({
-  name: 'LocationDialog',
+const props = defineProps<{
+  show: boolean
+  loading?: boolean
+  editingMarker?: number | null
+  currentMarker: Location
+  isDarkMode?: boolean
+}>()
 
-  props: {
-    show: {
-      type: Boolean,
-      required: true,
-    },
-    loading: {
-      type: Boolean,
-      default: false,
-    },
-    editingMarker: {
-      type: Number as PropType<number | null>,
-      default: null,
-    },
-    currentMarker: {
-      type: Object as () => Location,
-      required: true,
-    },
-    isDarkMode: {
-      type: Boolean,
-      default: false,
-    },
-  },
+const emit = defineEmits<{
+  'update:show': [value: boolean]
+  save: [data: Location]
+}>()
 
-  data() {
-    const { t } = useI18n()
-    return {
-      t,
-      MARKER_COLORS,
-      MARKER_ICONS,
-      formData: {
-        name: '',
-        url: '',
-        description: '',
-        iconType: 'default',
-        color: 'blue',
-        latitude: 0,
-        longitude: 0,
-      } as Location,
-    }
-  },
+const { t } = useI18n()
 
-  watch: {
-    currentMarker: {
-      immediate: true,
-      handler(newVal: Location) {
-        this.formData = { ...newVal }
-      },
-    },
-  },
-
-  methods: {
-    getIconName,
-
-    onClose() {
-      this.$emit('update:show', false)
-    },
-
-    onSave() {
-      this.$emit('save', this.formData)
-    },
-
-    selectIcon(type: keyof TranslationIconType) {
-      this.formData.iconType = type
-    },
-
-    selectColor(color: keyof TranslationColorType) {
-      this.formData.color = color
-    },
-
-    openUrl() {
-      if (this.formData.url) {
-        window.open(this.formData.url, '_blank')
-      }
-    },
-  },
+const formData = ref<Location>({
+  name: '',
+  url: '',
+  description: '',
+  iconType: 'default',
+  color: 'blue',
+  latitude: 0,
+  longitude: 0,
 })
+
+watch(
+  () => props.currentMarker,
+  (newVal: Location) => {
+    formData.value = { ...newVal }
+  },
+  { immediate: true }
+)
+
+const onClose = () => {
+  emit('update:show', false)
+}
+
+const onSave = () => {
+  emit('save', formData.value)
+}
+
+const selectIcon = (type: keyof TranslationIconType) => {
+  formData.value.iconType = type
+}
+
+const selectColor = (color: keyof TranslationColorType) => {
+  formData.value.color = color
+}
+
+const openUrl = () => {
+  if (formData.value.url) {
+    window.open(formData.value.url, '_blank')
+  }
+}
 </script>

@@ -82,31 +82,20 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script setup lang="ts">
 import { useI18n } from '../i18n'
 
-export default defineComponent({
-  name: 'AboutDialog',
+defineProps<{
+  show: boolean
+}>()
 
-  props: {
-    show: {
-      type: Boolean,
-      required: true,
-    },
-  },
+const emit = defineEmits<{
+  'update:show': [value: boolean]
+}>()
 
-  data() {
-    const { t } = useI18n()
-    return { t }
-  },
+const { t } = useI18n()
 
-  emits: ['update:show'],
-
-  methods: {
-    onClose() {
-      this.$emit('update:show', false)
-    },
-  },
-})
+const onClose = () => {
+  emit('update:show', false)
+}
 </script>
