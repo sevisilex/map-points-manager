@@ -1,6 +1,7 @@
 import { ref, computed } from 'vue'
+import { setLanguageStorage, getLanguageStorage } from '../services/storage'
 
-type Language = 'de' | 'en' | 'pl'
+export type Language = 'de' | 'en' | 'pl'
 
 const translation = {
   toggleSidebar: 'Toggle sidebar',
@@ -186,14 +187,14 @@ export const useI18n = () => {
 
   const setLanguage = (lang: Language) => {
     currentLanguage.value = lang
-    localStorage.setItem('preferred-language', lang)
+    setLanguageStorage(lang)
   }
 
   const getLanguage = () => currentLanguage.value
 
   // Initialize language from localStorage if available
   const initializeLanguage = () => {
-    const savedLang = localStorage.getItem('preferred-language') as Language
+    const savedLang = getLanguageStorage()
     if (savedLang && ['de', 'en', 'pl'].includes(savedLang)) {
       currentLanguage.value = savedLang
     }

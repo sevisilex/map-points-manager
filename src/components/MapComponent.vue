@@ -55,6 +55,7 @@ import ConfirmDialog from './ConfirmDialog.vue'
 import Controls from './Controls.vue'
 import AboutDialog from './AboutDialog.vue'
 import { useI18n } from '../i18n'
+import { isDarkModeStorage, setDarkModeStorage, setSidebarOpenStorage } from '../services/storage'
 
 const { t } = useI18n()
 
@@ -84,13 +85,13 @@ const currentMarker = ref<Location>({
 const toggleDarkMode = () => {
   isDarkMode.value = !isDarkMode.value
   document.documentElement.classList.toggle('dark')
-  localStorage.setItem('theme', isDarkMode.value ? 'dark' : 'light')
+  setDarkModeStorage(isDarkMode.value)
   updateMap()
 }
 
 const toggleSidebar = () => {
   isSidebarOpen.value = !isSidebarOpen.value
-  localStorage.setItem('sidebar-state', isSidebarOpen.value ? 'open' : 'closed')
+  setSidebarOpenStorage(isSidebarOpen.value)
 }
 
 const handleMarkerClick = async (markerId: number) => {
@@ -260,8 +261,7 @@ const updateMap = () => {
 }
 
 const initTheme = () => {
-  const theme = localStorage.getItem('theme')
-  isDarkMode.value = theme === 'dark'
+  isDarkMode.value = isDarkModeStorage()
   if (isDarkMode.value) {
     document.documentElement.classList.add('dark')
   }

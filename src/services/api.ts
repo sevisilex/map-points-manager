@@ -1,5 +1,5 @@
 import type { Location } from '../types/Location'
-import { locationsDB } from '../db/database'
+import { locationsDB } from './database'
 
 const FALLBACK_LOCATION: Omit<Location, 'id'> = {
   name: '[Demo] Failed to load demo.json',
