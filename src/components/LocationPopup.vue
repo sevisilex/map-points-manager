@@ -57,7 +57,6 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits } from 'vue'
 import type { Location } from '../types/Location'
 import { useI18n } from '../i18n'
 import { getIconName, MARKER_COLORS } from '../constants/markerIcons'

@@ -108,7 +108,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, defineEmits, watch } from 'vue'
+import { ref, watch } from 'vue'
 import { TranslationColorType, TranslationIconType, useI18n } from '../i18n'
 import { MARKER_COLORS, MARKER_ICONS, getIconName } from '../constants/markerIcons'
 import type { Location } from '../types/Location'
