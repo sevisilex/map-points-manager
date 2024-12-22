@@ -14,6 +14,7 @@ A dynamic web application built with Vue 3 and TypeScript that allows users to m
 
 ## 🚀 Live Demo
 
+[![Open on GitHub Pages](/docs/buttons/github-demo.svg)](https://sevisilex.github.io/map-points-manager/)
 [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/~/github.com/sevisilex/map-points-manager)
 
 ## ✨ Features
