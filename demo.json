@@ -1,0 +1,290 @@
+[
+  {
+    "name": "Braunschweiger Dom",
+    "description": "Historic Brunswick Cathedral, founded by Henry the Lion in 1173. Features Romanesque architecture.",
+    "url": "https://www.braunschweiger-dom.de",
+    "iconType": "museum",
+    "color": "purple",
+    "latitude": 52.26435,
+    "longitude": 10.52356
+  },
+  {
+    "name": "Happy Rizzi House",
+    "description": "Colorful pop art building designed by James Rizzi, featuring whimsical faces and patterns",
+    "url": "https://www.braunschweig.de/kultur/architektur/happy-rizzi-house.php",
+    "iconType": "home",
+    "color": "pink",
+    "latitude": 52.26227,
+    "longitude": 10.52884
+  },
+  {
+    "name": "Botanischer Garten TU",
+    "description": "Beautiful botanical garden of Technical University with diverse plant collections",
+    "url": "https://www.tu-braunschweig.de/botanischergarten",
+    "iconType": "park",
+    "color": "green",
+    "latitude": 52.27039,
+    "longitude": 10.53366
+  },
+  {
+    "name": "Kaffeezeremonie",
+    "description": "Cozy café with excellent coffee and homemade cakes",
+    "iconType": "cafe",
+    "color": "orange",
+    "latitude": 52.26181,
+    "longitude": 10.53094
+  },
+  {
+    "name": "Naturhistorisches Museum",
+    "description": "Natural history museum with impressive collections and exhibits",
+    "url": "https://www.3landesmuseen.de/naturhistorisches-museum.html",
+    "iconType": "museum",
+    "color": "blue",
+    "latitude": 52.27526,
+    "longitude": 10.52921
+  },
+  {
+    "name": "Prinz-Albrecht-Park",
+    "description": "Historic park with beautiful landscaping and walking paths",
+    "iconType": "park",
+    "color": "green",
+    "latitude": 52.26622,
+    "longitude": 10.55342
+  },
+  {
+    "name": "St. Magni Kirche",
+    "description": "One of the oldest churches in Braunschweig with beautiful Gothic architecture",
+    "iconType": "default",
+    "color": "white",
+    "latitude": 52.26238,
+    "longitude": 10.53005
+  },
+  {
+    "name": "Herzog Anton Ulrich Museum",
+    "description": "Oldest art museum in Germany with impressive collections",
+    "url": "https://www.3landesmuseen.de/herzog-anton-ulrich-museum.html",
+    "iconType": "museum",
+    "color": "black",
+    "latitude": 52.26344,
+    "longitude": 10.53308
+  },
+  {
+    "name": "Schlossplatz",
+    "description": "Central square with reconstructed palace and shopping arcade",
+    "iconType": "shop",
+    "color": "blue",
+    "latitude": 52.2634,
+    "longitude": 10.52716
+  },
+  {
+    "name": "Café Zeit",
+    "description": "Popular café in historic building with outdoor seating",
+    "iconType": "cafe",
+    "color": "orange",
+    "latitude": 52.26435,
+    "longitude": 10.52187
+  },
+  {
+    "name": "Museum Park",
+    "description": "Peaceful park surrounding the Herzog Anton Ulrich Museum",
+    "iconType": "park",
+    "color": "green",
+    "latitude": 52.26479,
+    "longitude": 10.53244
+  },
+  {
+    "name": "St. Katharinen",
+    "description": "Historic church with impressive Gothic architecture",
+    "iconType": "default",
+    "color": "white",
+    "latitude": 52.26752,
+    "longitude": 10.52524
+  },
+  {
+    "name": "Altstadtmarkt",
+    "description": "Historic market square with Old Town Hall and Alte Waage",
+    "iconType": "shop",
+    "color": "blue",
+    "latitude": 52.26278,
+    "longitude": 10.51778
+  },
+  {
+    "name": "Kohlmarkt",
+    "description": "Historic market square with cafes and shops",
+    "iconType": "shop",
+    "color": "orange",
+    "latitude": 52.26235,
+    "longitude": 10.52001
+  },
+  {
+    "name": "Braunschweiger Löwe",
+    "description": "Famous bronze lion statue, symbol of the city",
+    "iconType": "museum",
+    "color": "black",
+    "latitude": 52.26468,
+    "longitude": 10.52378
+  },
+  {
+    "name": "Marien Fountain",
+    "description": "Historic fountain at Altstadtmarkt square",
+    "iconType": "museum",
+    "color": "blue",
+    "latitude": 52.26278,
+    "longitude": 10.51778
+  },
+  {
+    "name": "St. Martini",
+    "description": "Gothic church with impressive spire",
+    "iconType": "default",
+    "color": "white",
+    "latitude": 52.26265,
+    "longitude": 10.51631
+  },
+  {
+    "name": "Café [ein]heimisch",
+    "description": "Modern café with local specialties",
+    "iconType": "cafe",
+    "color": "orange",
+    "latitude": 52.26548,
+    "longitude": 10.52932
+  },
+  {
+    "name": "Bürger Park",
+    "description": "Large public park with recreational areas",
+    "iconType": "park",
+    "color": "green",
+    "latitude": 52.25343,
+    "longitude": 10.52324
+  },
+  {
+    "name": "Alte Waage",
+    "description": "Historic weighing house from 1534",
+    "iconType": "home",
+    "color": "black",
+    "latitude": 52.2676,
+    "longitude": 10.51985
+  },
+  {
+    "name": "Makery Café",
+    "description": "Modern café and lounge with creative atmosphere",
+    "iconType": "cafe",
+    "color": "pink",
+    "latitude": 52.26133,
+    "longitude": 10.52674
+  },
+  {
+    "name": "Strupait Café",
+    "description": "Cozy café with homemade pastries",
+    "iconType": "cafe",
+    "color": "orange",
+    "latitude": 52.26188,
+    "longitude": 10.53177
+  },
+  {
+    "name": "Richmond Palace",
+    "description": "Historic palace with beautiful gardens",
+    "iconType": "home",
+    "color": "purple",
+    "latitude": 52.24008,
+    "longitude": 10.52658
+  },
+  {
+    "name": "Kapai Kaffeehaus",
+    "description": "Charming coffee house with specialty coffees",
+    "iconType": "cafe",
+    "color": "orange",
+    "latitude": 52.261,
+    "longitude": 10.52006
+  },
+  {
+    "name": "Lüttes Café",
+    "description": "Popular café with breakfast and lunch options",
+    "iconType": "cafe",
+    "color": "pink",
+    "latitude": 52.26846,
+    "longitude": 10.51944
+  },
+  {
+    "name": "Anton's Café & Bistro",
+    "description": "Museum café with beautiful terrace",
+    "iconType": "cafe",
+    "color": "orange",
+    "latitude": 52.26388,
+    "longitude": 10.53275
+  },
+  {
+    "name": "Staatstheater",
+    "description": "Main theater offering opera and plays",
+    "url": "https://staatstheater-braunschweig.de",
+    "iconType": "default",
+    "color": "purple",
+    "latitude": 52.26505,
+    "longitude": 10.5291
+  },
+  {
+    "name": "Dankwarderode Castle",
+    "description": "Medieval castle next to the Cathedral",
+    "url": "https://www.3landesmuseen.de/burg-dankwarderode.html",
+    "iconType": "home",
+    "color": "black",
+    "latitude": 52.26447,
+    "longitude": 10.52431
+  },
+  {
+    "name": "FRIEDAS",
+    "description": "Modern café with garden terrace",
+    "iconType": "cafe",
+    "color": "pink",
+    "latitude": 52.25951,
+    "longitude": 10.51521
+  },
+  {
+    "name": "St. Ulrici-Brüdern",
+    "description": "Historic church with beautiful interior",
+    "iconType": "default",
+    "color": "white",
+    "latitude": 52.26563,
+    "longitude": 10.51883
+  },
+  {
+    "name": "Ritterbrunnen",
+    "description": "Medieval knight fountain with sculptures",
+    "iconType": "default",
+    "color": "blue",
+    "latitude": 52.2641,
+    "longitude": 10.52815
+  },
+  {
+    "name": "Café Spruchreif",
+    "description": "Cozy neighborhood café",
+    "iconType": "cafe",
+    "color": "orange",
+    "latitude": 52.27485,
+    "longitude": 10.47726
+  },
+  {
+    "name": "Heinrichsbrunnen",
+    "description": "Historic fountain featuring Henry the Lion",
+    "iconType": "default",
+    "color": "blue",
+    "latitude": 52.26719,
+    "longitude": 10.52429
+  },
+  {
+    "name": "Burgplatz",
+    "description": "Historic square with cathedral and castle",
+    "iconType": "default",
+    "color": "purple",
+    "latitude": 52.2645,
+    "longitude": 10.5235
+  },
+  {
+    "name": "TU Braunschweig",
+    "description": "Historic main building of Technical University",
+    "url": "https://www.tu-braunschweig.de",
+    "iconType": "school",
+    "color": "blue",
+    "latitude": 52.27326,
+    "longitude": 10.52765
+  }
+]
