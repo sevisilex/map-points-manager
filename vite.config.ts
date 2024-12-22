@@ -6,6 +6,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd())
 
   return {
+    base: env.VITE_BASE,
     server: {
       host: env.VITE_HOST,
       port: parseInt(env.VITE_PORT) || undefined,

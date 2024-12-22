@@ -13,7 +13,7 @@ const FALLBACK_LOCATION: Omit<Location, 'id'> = {
 
 const loadDemoLocations = async (): Promise<Omit<Location, 'id'>[]> => {
   try {
-    const response = await fetch('/demo.json')
+    const response = await fetch(`${import.meta.env.VITE_BASE || '/'}demo.json`)
     if (!response.ok) {
       throw new Error('Failed to load demo data')
     }
