@@ -1,10 +1,9 @@
 import { Language } from '../i18n'
 
-const setStorageItem = <T>(key: string, value: T): void => localStorage.setItem(key, JSON.stringify(value))
+const setStorageItem = <T>(key: string, value: T): void => localStorage.setItem(key, String(value))
 const getStorageItem = <T>(key: string): T | null => {
   const item = localStorage.getItem(key)
-  // return item ? (JSON.parse(item) as T) : null
-  return item ? item as T : null
+  return item ? (item as T) : null
 }
 
 export const setDarkModeStorage = (isDark: boolean): void => setStorageItem('theme', isDark ? 'dark' : 'light')
